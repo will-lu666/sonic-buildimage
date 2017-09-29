@@ -1,0 +1,9 @@
+Package: platform-modules-bfn-montara
+Version: 1.0
+Architecture: amd64
+Maintainer: Shuotian Cheng <shuche@microsoft.com>
+Installed-Size: 352
+Depends: linux-image-3.16.0-4-amd64
+Section: main
+Priority: extra
+Description: kernel modules for platform devices such as fan, led, sfp

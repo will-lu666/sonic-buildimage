@@ -1,0 +1,1 @@
+cmd_/sonic/platform/barefoot/sonic-platform-modules-bfn-montara/modules/built-in.o :=  rm -f /sonic/platform/barefoot/sonic-platform-modules-bfn-montara/modules/built-in.o; ar rcsD /sonic/platform/barefoot/sonic-platform-modules-bfn-montara/modules/built-in.o
