@@ -114,6 +114,7 @@ router bgp {{ DEVICE_METADATA['localhost']['bgp_asn'] }}
 {% endfor %}
 {% endif %}
 {% endblock bgp_peers_with_range %}
+redistribute connected
 !
 {% if DEVICE_METADATA['localhost'].has_key('bgp_asn') %}
 maximum-paths 64
