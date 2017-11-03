@@ -114,6 +114,9 @@ RUN apt-get update && apt-get install -y \
 # For mellanox sai build
         libtool-bin \
         libxml2-dev \
+# For BFN sdk build
+        libusb-1.0-0-dev \
+        libcurl3-nss-dev \
 # For build image
         cpio \
         squashfs-tools \
