@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+ulimit -c unlimited
+sysctl -w kernel.core_pattern=core
+
 # Export platform information. Required to be able to write
 # vendor specific code.
 export platform=`sonic-cfggen -y /etc/sonic/sonic_version.yml -v asic_type`
@@ -18,7 +21,7 @@ if [ "$platform" == "broadcom" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 elif [ "$platform" == "cavium" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
-elif [ "$ASIC" == "barefoot" ]; then
+elif [ "$platform" == "barefoot" ]; then
     ORCHAGENT_ARGS+="-m $MAC_ADDRESS"
 fi
 
