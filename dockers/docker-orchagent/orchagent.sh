@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-ulimit -c unlimited
-sysctl -w kernel.core_pattern=core
-
 # Export platform information. Required to be able to write
 # vendor specific code.
 export platform=`sonic-cfggen -y /etc/sonic/sonic_version.yml -v asic_type`
