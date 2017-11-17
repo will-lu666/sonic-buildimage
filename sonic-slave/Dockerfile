@@ -117,6 +117,7 @@ RUN apt-get update && apt-get install -y \
 # For BFN sdk build
         libusb-1.0-0-dev \
         libcurl3-nss-dev \
+        telnet \
 # For build image
         cpio \
         squashfs-tools \
