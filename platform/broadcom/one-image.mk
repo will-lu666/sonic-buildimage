@@ -11,9 +11,12 @@ $(SONIC_ONE_IMAGE)_LAZY_INSTALLS += $(DELL_S6000_PLATFORM_MODULE) \
                                $(INGRASYS_S8900_64XC_PLATFORM_MODULE) \
                                $(INGRASYS_S9100_PLATFORM_MODULE) \
                                $(INGRASYS_S8810_32Q_PLATFORM_MODULE) \
+                               $(INGRASYS_S9200_64X_PLATFORM_MODULE) \
                                $(ACCTON_AS7712_32X_PLATFORM_MODULE) \
+                               $(ACCTON_AS5712_54X_PLATFORM_MODULE) \
                                $(INVENTEC_D7032Q28B_PLATFORM_MODULE) \
                                $(INVENTEC_D7054Q28B_PLATFORM_MODULE) \
-                               $(CEL_DX010_PLATFORM_MODULE)
+                               $(CEL_DX010_PLATFORM_MODULE) \
+                               $(DELTA_AG9032V1_PLATFORM_MODULE)
 $(SONIC_ONE_IMAGE)_DOCKERS += $(SONIC_INSTALL_DOCKER_IMAGES)
 SONIC_INSTALLERS += $(SONIC_ONE_IMAGE)
