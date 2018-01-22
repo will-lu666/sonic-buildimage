@@ -4,7 +4,7 @@ FROM docker-syncd-bfn
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY \
-{% for deb in docker_syncd_bfn.split(' ') -%}
+{% for deb in docker_syncd_bfn_rpc_debs.split(' ') -%}
 debs/{{ deb }}{{' '}}
 {%- endfor -%}
 debs/
@@ -12,7 +12,7 @@ debs/
 RUN dpkg -P syncd
 
 RUN dpkg_apt() { [ -f $1 ] && { dpkg -i $1 || apt-get -y install -f; } || return 1; } ; \
-{% for deb in docker_syncd_bfn.split(' ') -%}
+{% for deb in docker_syncd_bfn_rpc_debs.split(' ') -%}
 dpkg_apt debs/{{ deb }}{{'; '}}
 {%- endfor %}
 
