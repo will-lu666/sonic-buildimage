@@ -1,5 +1,6 @@
 include $(PLATFORM_PATH)/platform-modules-bfn.mk
 include $(PLATFORM_PATH)/platform-modules-bfn-montara.mk
+include $(PLATFORM_PATH)/platform-modules-wnc-osw1800.mk
 include $(PLATFORM_PATH)/bfn-sai.mk
 include $(PLATFORM_PATH)/docker-syncd-bfn.mk
 include $(PLATFORM_PATH)/docker-syncd-bfn-rpc.mk
