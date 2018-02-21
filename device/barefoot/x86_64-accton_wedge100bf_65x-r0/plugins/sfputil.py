@@ -21,6 +21,15 @@ thrift_server = 'localhost'
 transport = None
 pltfm_mgr = None
 
+def print_usage():
+    print "Usage: sfputil.py <function> <param list>        "
+    print "           function: sfp_dump_port <port>        "
+    print "                     sfp_dump_all                "
+    print "                     sfp_reset <port>            "
+    print "                     sfp_get_presence            "
+    print "                     get_low_power_mode <port>   "
+    print "                     set_low_power_mode <port> <lp_mode: 0/1> "
+    
 def thriftSetup():
     global thrift_server, transport, pltfm_mgr
     transport = TSocket.TSocket(thrift_server, 9090)
@@ -136,10 +145,26 @@ def pltfm_mgr_sfp_dump_all():
     pltfm_mgr_sfp_dump(1, qsfp_max_port)
 
 def pltfm_mgr_sfp_dump_port(port_num):
+    global pltfm_mgr
+
+    qsfp_max_port = pltfm_mgr.pltfm_mgr_qsfp_get_max_port();
+    if ((port_num > qsfp_max_port) | (port_num < 1)):
+      print "Invalid port: range: 1-%d" % qsfp_max_port
+      print ""
+      print_usage()
+      exit()
+
     pltfm_mgr_sfp_dump(port_num, port_num)
 
 def sfp_reset(port_num):
     global pltfm_mgr
+
+    qsfp_max_port = pltfm_mgr.pltfm_mgr_qsfp_get_max_port();
+    if ((port_num > qsfp_max_port) | (port_num < 1)):
+      print "Invalid port: range: 1-%d" % qsfp_max_port
+      print ""
+      print_usage()
+      exit()
 
     status = pltfm_mgr.pltfm_mgr_qsfp_reset(port_num, True)
     status = pltfm_mgr.pltfm_mgr_qsfp_reset(port_num, False)
@@ -160,6 +185,13 @@ def sfp_get_presence():
 def get_low_power_mode(port_num):             
     global pltfm_mgr
 
+    qsfp_max_port = pltfm_mgr.pltfm_mgr_qsfp_get_max_port();
+    if ((port_num > qsfp_max_port) | (port_num < 1)):
+      print "Invalid port: range: 1-%d" % qsfp_max_port
+      print ""
+      print_usage()
+      exit()
+
     lpmode = pltfm_mgr.pltfm_mgr_qsfp_lpmode_get(port_num)
     return lpmode
 
@@ -167,18 +199,22 @@ def get_low_power_mode(port_num):
 def set_low_power_mode(port_num, lpmode):                
     global pltfm_mgr
 
+    qsfp_max_port = pltfm_mgr.pltfm_mgr_qsfp_get_max_port();
+    if ((port_num > qsfp_max_port) | (port_num < 1)):
+      print "Invalid port: range: 1-%d" % qsfp_max_port
+      print ""
+      print_usage()
+      exit()
+
+    if ((lpmode > 1) | (lpmode < 0)):
+      print "Invalid mode: 0/1"
+      print ""
+      print_usage()
+      exit()
+
     sts = pltfm_mgr.pltfm_mgr_qsfp_lpmode_set(port_num, lpmode)
     return sts
 
-def print_usage():
-    print "Usage: sfputil.py <function> <param list>        "
-    print "           function: sfp_dump_port <port>        "
-    print "                     sfp_dump_all                "
-    print "                     sfp_reset <port>            "
-    print "                     sfp_get_presence            "
-    print "                     get_low_power_mode <port>   "
-    print "                     set_low_power_mode <port> <lp_mode: 0/1> "
-    
 
 def thriftTeardown():
     global transport
@@ -192,6 +228,10 @@ if (argc == 1):
   exit()
 
 if (sys.argv[1] == "sfp_dump_port"):
+  if (argc < 3):
+    print_usage()
+    exit()
+
   port_num = int(sys.argv[2])
   pltfm_mgr_sfp_dump_port(port_num)
   exit()
@@ -201,6 +241,10 @@ if (sys.argv[1] == "sfp_dump_all"):
   exit()
 
 if (sys.argv[1] == "sfp_reset"):
+  if (argc < 3):
+    print_usage()
+    exit()
+
   port_num = int(sys.argv[2])
   sfp_reset(port_num)
   exit()
@@ -210,12 +254,20 @@ if (sys.argv[1] == "sfp_get_presence"):
   exit()
 
 if (sys.argv[1] == "get_low_power_mode"):
+  if (argc < 3):
+    print_usage()
+    exit()
+
   port_num = int(sys.argv[2])
   mode = get_low_power_mode(port_num)
   print "Port: %d lp mode: %s" % (port_num, mode)
   exit()
 
 if (sys.argv[1] == "set_low_power_mode"):
+  if (argc < 4):
+    print_usage()
+    exit()
+
   port_num = int(sys.argv[2])
   lp_mode = int(sys.argv[3])
   set_low_power_mode(port_num, lp_mode)

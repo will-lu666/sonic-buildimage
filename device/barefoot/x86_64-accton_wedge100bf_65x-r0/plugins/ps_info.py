@@ -21,6 +21,8 @@ thrift_server = 'localhost'
 transport = None
 pltfm_mgr = None
 
+MAX_PS_NUM = 2
+
 def thriftSetup():
     global thrift_server, transport, pltfm_mgr
     transport = TSocket.TSocket(thrift_server, 9090)
@@ -42,12 +44,28 @@ def pltfm_mgr_ps_info_get(ps_num):
     print "PS Serial #: %s" % ps_info.serial
     print "PS revision: %s" % ps_info.rev
 
+def print_usage():
+    print "Usage: ps_info.py <power supply #>         "
+
 def thriftTeardown():
     global transport
     transport.close()
 
 
 thriftSetup()
+
+argc = len(sys.argv)
+if (argc == 1):
+  print_usage()
+  exit()
+
 ps_num = int(sys.argv[1])
+
+if ((ps_num > MAX_PS_NUM) | (ps_num <= 0)):
+  print "Invalid Power supply #. Max %d" % MAX_PS_NUM
+  print ""
+  print_usage()
+  exit()
+
 pltfm_mgr_ps_info_get(ps_num)
 thriftTeardown()
