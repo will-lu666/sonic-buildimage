@@ -40,7 +40,6 @@ def thriftSetup():
 def pltfm_mgr_sensor_get():
     global pltfm_mgr
     raw_out = pltfm_mgr.pltfm_mgr_sensor_info_get()
-    print "raw-out: %s" % raw_out
     raw_list = raw_out.split('\"')
     sensors_out = raw_list[1]
     sensors_out = codecs.decode(sensors_out, "unicode_escape")
