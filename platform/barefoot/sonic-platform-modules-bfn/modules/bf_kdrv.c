@@ -58,7 +58,13 @@
 #include <linux/version.h>
 #include <linux/wait.h>
 #include <linux/poll.h>
-#include <linux/sched.h>
+
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(4, 11, 0)
+  #include <linux/sched/signal.h>
+#else
+ #include <linux/sched.h>
+#endif
+
 #include <linux/cdev.h>
 #include <linux/aer.h>
 #include <linux/string.h>
@@ -591,7 +597,6 @@ static ssize_t bf_read(struct file *filep, char __user *buf,
       return -EINVAL;
     count = sizeof(s32);
   }
-  count = sizeof(s32)*BF_MSIX_ENTRY_CNT;
 
   do {
     set_current_state(TASK_INTERRUPTIBLE);
@@ -611,7 +616,7 @@ static ssize_t bf_read(struct file *filep, char __user *buf,
       if (copy_to_user(buf, &event_count, count))
         retval = -EFAULT;
       else { /* adjust the listener->event_count; */
-        for (i = 0 ; i < BF_MSIX_ENTRY_CNT; i++) {
+        for (i = 0 ; i < (count/sizeof(s32)); i++) {
           if (cnt_match[i]) {
             listener->event_count[i] = event_count[i];
           }
