@@ -1,7 +1,7 @@
 Source: platform-modules-bfn
 Section: main
 Priority: extra
-Maintainer: Shuotian Cheng <shuche@microsoft.com>
+Maintainer: support <support@edge-core.com>
 Build-Depends: debhelper (>= 8.0.0), bzip2
 Standards-Version: 3.9.3
 
