@@ -42,7 +42,7 @@ elif [[ "$HWSKU" == "ACS-MSN27"* ]]; then
     SWSSCONFIG_ARGS+="msn27xx.32ports.buffers.json "
 fi
 
-if [[ "$HWSKU" != "montara" ] && [ "$HWSKU" != "mavericks" ] && [ "$HWSKU" != "OSW1800-48x6q" ] && [ "$HWSKU" != "INGRASYS-S9180-32X"]]; then
+if [ "$HWSKU" != "montara" ] && [ "$HWSKU" != "mavericks" ] && [ "$HWSKU" != "OSW1800-48x6q" ] && [ "$HWSKU" != "INGRASYS-S9180-32X"]; then
     SWSSCONFIG_ARGS+="ipinip.json "
 fi
 
