@@ -27,7 +27,13 @@ fast_reboot
 
 HWSKU=`sonic-cfggen -d -v "DEVICE_METADATA['localhost']['hwsku']"`
 
-SWSSCONFIG_ARGS="00-copp.config.json ports.json switch.json "
+SWSSCONFIG_ARGS="00-copp.config.json "
+
+if [ "$HWSKU" != "montara" ] && [ "$HWSKU" != "mavericks" ] && [ "$HWSKU" != "OSW1800-48x6q" ] && [ "$HWSKU" != "INGRASYS-S9180-32X"]; then
+    SWSSCONFIG_ARGS+="ipinip.json "
+fi
+
+SWSSCONFIG_ARGS+="ports.json switch.json "
 
 if [ "$HWSKU" == "Force10-S6000" ]; then
     SWSSCONFIG_ARGS+="td2.32ports.buffers.json td2.32ports.qos.json "
@@ -40,10 +46,6 @@ elif [ "$HWSKU" == "Arista-7050-QX32" ]; then
 elif [[ "$HWSKU" == "ACS-MSN27"* ]]; then
     sonic-cfggen -d -t /usr/share/sonic/templates/msn27xx.32ports.buffers.json.j2 > /etc/swss/config.d/msn27xx.32ports.buffers.json
     SWSSCONFIG_ARGS+="msn27xx.32ports.buffers.json "
-fi
-
-if [ "$HWSKU" != "montara" ] && [ "$HWSKU" != "mavericks" ] && [ "$HWSKU" != "OSW1800-48x6q" ] && [ "$HWSKU" != "INGRASYS-S9180-32X"]; then
-    SWSSCONFIG_ARGS+="ipinip.json "
 fi
 
 for file in $SWSSCONFIG_ARGS; do
