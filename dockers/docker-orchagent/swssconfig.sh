@@ -16,11 +16,25 @@ function fast_reboot {
         swssconfig /arp.json
         rm -f /arp.json
       fi
+
+      if [[ -f /default_routes.json ]];
+      then
+        swssconfig /default_routes.json
+        rm -f /default_routes.json
+      fi
+
       ;;
     *)
       ;;
   esac
 }
+
+# Wait until swss.sh in the host system create file swss:/ready
+until [[ -e /ready ]]; do
+    sleep 0.1;
+done
+
+rm -f /ready
 
 # Restore FDB and ARP table ASAP
 fast_reboot
@@ -34,19 +48,6 @@ if [ "$HWSKU" != "montara" ] && [ "$HWSKU" != "mavericks" ] && [ "$HWSKU" != "OS
 fi
 
 SWSSCONFIG_ARGS+="ports.json switch.json "
-
-if [ "$HWSKU" == "Force10-S6000" ]; then
-    SWSSCONFIG_ARGS+="td2.32ports.buffers.json td2.32ports.qos.json "
-elif [ "$HWSKU" == "Force10-S6000-Q32" ]; then
-    SWSSCONFIG_ARGS+="td2.32ports.buffers.json td2.32ports.qos.json "
-elif [ "$HWSKU" == "Force10-S6100" ]; then
-    SWSSCONFIG_ARGS+="th.64ports.buffers.json th.64ports.qos.json "
-elif [ "$HWSKU" == "Arista-7050-QX32" ]; then
-    SWSSCONFIG_ARGS+="td2.32ports.buffers.json td2.32ports.qos.json "
-elif [[ "$HWSKU" == "ACS-MSN27"* ]]; then
-    sonic-cfggen -d -t /usr/share/sonic/templates/msn27xx.32ports.buffers.json.j2 > /etc/swss/config.d/msn27xx.32ports.buffers.json
-    SWSSCONFIG_ARGS+="msn27xx.32ports.buffers.json "
-fi
 
 for file in $SWSSCONFIG_ARGS; do
     swssconfig /etc/swss/config.d/$file
