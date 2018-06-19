@@ -5,6 +5,6 @@ if [ -t 1 ] ; then
     DOCKER_EXEC_FLAGS+="t"
 fi
 
-docker exec -$DOCKER_EXEC_FLAGS syncd sensors.py "$@"
+docker exec -$DOCKER_EXEC_FLAGS syncd sensors "$@"
 
 
