@@ -43,11 +43,11 @@ RUN pip install ipaddr \
                 pysnmp==4.2.5 \
                 jinja2==2.7.2 \
                 cffi==1.10.0 \
-                paramiko==2.1.2
+                paramiko==2.1.2 \
+                adal
 
-# Install Microsoft Azure Kusto Library for Python
-RUN pip install azure-kusto-data \
-                azure-kusto-ingest
+# Install Azure Storage package
+RUN pip install azure-storage
 
 ## Copy and install sonic-mgmt docker dependencies
 COPY \

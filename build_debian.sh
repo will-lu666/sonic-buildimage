@@ -3,22 +3,26 @@
 ## an ONIE installer image.
 ##
 ## USAGE:
-##   USERNAME=username PASSWORD=password ./build_debian
-## ENVIRONMENT:
+##   ./build_debian USERNAME PASSWORD_ENCRYPTED
+## PARAMETERS:
 ##   USERNAME
 ##          The name of the default admin user
-##   PASSWORD
-##          The password, expected by chpasswd command
+##   PASSWORD_ENCRYPTED
+##          The encrypted password, expected by chpasswd command
 
 ## Default user
+USERNAME=$1
 [ -n "$USERNAME" ] || {
-    echo "Error: no or empty USERNAME"
+    echo "Error: no or empty USERNAME argument"
     exit 1
 }
 
-## Password for the default user
-[ -n "$PASSWORD" ] || {
-    echo "Error: no or empty PASSWORD"
+## Password for the default user, customizable by environment variable
+## By default it is an empty password
+## You may get a crypted password by: perl -e 'print crypt("YourPaSsWoRd", "salt"),"\n"'
+PASSWORD_ENCRYPTED=$2
+[ -n "$PASSWORD_ENCRYPTED" ] || {
+    echo "Error: no or empty PASSWORD_ENCRYPTED argument"
     exit 1
 }
 
@@ -174,7 +178,7 @@ sudo cp files/docker/docker.service.conf $_
 ## Note: user should be in the group with the same name, and also in sudo/docker group
 sudo LANG=C chroot $FILESYSTEM_ROOT useradd -G sudo,docker $USERNAME -c "$DEFAULT_USERINFO" -m -s /bin/bash
 ## Create password for the default user
-echo "$USERNAME:$PASSWORD" | sudo LANG=C chroot $FILESYSTEM_ROOT chpasswd
+echo $USERNAME:$PASSWORD_ENCRYPTED | sudo LANG=C chroot $FILESYSTEM_ROOT chpasswd -e
 
 ## Pre-install hardware drivers
 sudo LANG=C chroot $FILESYSTEM_ROOT apt-get -y install      \
@@ -234,12 +238,6 @@ sudo dpkg --root=$FILESYSTEM_ROOT -i target/debs/libwrap0_*.deb || \
 
 ## Disable kexec supported reboot which was installed by default
 sudo sed -i 's/LOAD_KEXEC=true/LOAD_KEXEC=false/' $FILESYSTEM_ROOT/etc/default/kexec
-
-## Fix ping tools permission so non root user can directly use them
-## Note: this is a workaround since aufs doesn't support extended attributes
-## Ref: https://github.com/moby/moby/issues/5650#issuecomment-303499489
-## TODO: remove workaround when the overlay filesystem support extended attributes
-sudo chmod u+s $FILESYSTEM_ROOT/bin/ping{,6}
 
 ## Remove sshd host keys, and will regenerate on first sshd start
 sudo rm -f $FILESYSTEM_ROOT/etc/ssh/ssh_host_*_key*
@@ -303,7 +301,6 @@ set /files/etc/sysctl.conf/net.ipv6.conf.eth0.forwarding 0
 
 set /files/etc/sysctl.conf/net.ipv6.conf.default.accept_dad 0
 set /files/etc/sysctl.conf/net.ipv6.conf.all.accept_dad 0
-set /files/etc/sysctl.conf/net.ipv6.conf.eth0.accept_dad 0
 
 set /files/etc/sysctl.conf/net.ipv6.conf.eth0.accept_ra_defrtr 0
 
