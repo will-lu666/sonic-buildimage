@@ -22,6 +22,7 @@ iface lo inet static
 # BMC interface
 auto usb0
 iface usb0 inet6 auto
+up ifconfig usb0 txqueuelen 64
 
 # The management network interface
 auto eth0
