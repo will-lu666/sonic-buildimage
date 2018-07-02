@@ -6,7 +6,7 @@
 fsroot/
 fs.*
 target/
-*.deb
+#*.deb
 *.changes
 
 # Subdirectories in src
